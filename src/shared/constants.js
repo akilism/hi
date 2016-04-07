@@ -1,0 +1,16 @@
+export const TRANSPORT_COMMANDS = {
+  INIT_NEW_SESSION: 0,
+  ACK_NEW_SESSION: 1,
+  INIT_KEY_RATCHET: 2,
+  ACK_KEY_RATCHET: 3,
+  MESSAGE: 5,
+  RESET: 6
+};
+
+export const USER = {
+  ALICE: 0,
+  BOB: 1,
+  INITIATOR: 0,
+  RECEIVER: 1
+};
+
