@@ -64,6 +64,39 @@ class Root extends Component {
     this.state = {
       notes: []
     };
+
+    this.commands = {
+      gh: {
+        type: 'website',
+        data: 'https://github.com/<username>/<repo>/tree/<branch>'
+      },
+      'gh-new':  {
+        type: 'website',
+        data: 'https://github.com/new'
+      },
+      mdn: {
+        type: 'website',
+        data: 'https://developer.mozilla.org/en-US/search?q=<term>'
+      }
+    }
+
+    this.cmdFns = {
+      'website': function(urlFormat, vals) {
+        const splitter = /<[a-z0-9]+>/gi;
+        const urlFragment = urlFormat.split(splitter);
+
+        //interleave the url format and the values into place.
+        //if no vals then use the first value of the url fragment.
+        //TODO: could be more robust if i captured the regex match and then
+        //used an object to hold the vals. right now the array needs to match
+        //the same order.
+        const url = vals.reduce((acc, v, i) => {
+          return [acc, urlFragment[i], v].join('');
+        }, '') || urlFragment[0];
+
+        window.location.href = url;
+      }
+    }
   }
 
   initClick(evt) {
@@ -71,11 +104,33 @@ class Root extends Component {
 
   }
 
+  runCommand(cmdKey, vals) {
+    const cmdDetails = this.commands[cmdKey];
+    const command = this.cmdFns[cmdDetails.type];
+    command(cmdDetails.data, vals);
+  }
+
+
+  checkCommand(vals) {
+    const cmdKey = Object.keys(this.commands).filter((k) => {
+      return k === vals[0];
+    });
+
+    if (!cmdKey) {
+      window.location.href = ['https://duckduckgo.com/?q=', ...vals].join('');
+      return;
+    }
+
+    this.runCommand(cmdKey, vals.slice(1));
+  }
+
   inputHandler(v, evt) {
     if(evt.keyCode === 13) {
       evt.preventDefault();
-      //https://developer.mozilla.org/en-US/search?q=array.prototype.splice
+      //https://developer.mozilla.org/en-US/search?q=<term>
       //https://github.com/<username>/<repo>/tree/<branch>
+      //https://github.com/new
+      this.checkCommand(evt.target.value.split(' '));
     }
   }
 
@@ -138,8 +193,8 @@ class Root extends Component {
       alignItems: 'center',
       fontSize: 16,
       backgroundColor: '#FDFDF',
-      backgroundImage: 'url("https://c2.staticflickr.com/2/1520/24581832900_c8394c1fd6_k.jpg")',
-      backgroundPosition: 'center bottom',
+      backgroundImage: 'url("https://c1.staticflickr.com/9/8443/7872169478_34ee34451b_k.jpg")',
+      backgroundPosition: 'center center',
       fontFamily: 'Input Mono Compressed',
       fontWeight: 200,
       fontStyle: 'italic'
