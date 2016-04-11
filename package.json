@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "cross-env NODE_ENV=development babel-node ./dev-env/dev.js",
-    "build": "cross-env NODE_ENV=production babel-node --presets babel-preset-es2015 ./dev-env/build.js"
+    "build": "cross-env NODE_ENV=production babel-node ./dev-env/build.js"
   },
   "keywords": [
     "chrome",

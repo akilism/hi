@@ -34,6 +34,7 @@ function makeStyleLoaders() {
 function configGenerator(Manifest) {
 
   var isDevelopment = process.env.NODE_ENV != "production"
+  console.log('isDevelopment', isDevelopment);
 
   return {
     ///// Lowlevel config

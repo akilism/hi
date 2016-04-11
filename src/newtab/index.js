@@ -3,7 +3,20 @@ import {default as ReactDOM} from "react-dom";
 import "shared/reset.css";
 import "shared/page.css";
 
-//https://api.flickr.com/services/feeds/groups_pool.gne?id=69806216@N00&format=json  flickr group
+// TODOS:
+// Figure out focus to input on new tab creation.
+// Write a handler for http(s):// in the input.
+// Notes with a title and body (google keep style.)
+   // Expansion display.
+
+const images = ['https://c1.staticflickr.com/5/4071/4464815432_c3f96b1ea0_o.jpg',
+  'https://c1.staticflickr.com/5/4093/4810569917_20b0f562da_o.jpg',
+  'https://c2.staticflickr.com/4/3872/14302288760_bccf801826_k.jpg',
+  'https://c1.staticflickr.com/9/8675/16037131640_c26ef9777a_k.jpg',
+  'https://c2.staticflickr.com/8/7469/16036983998_8718e1ab5d_k.jpg',
+  'https://c1.staticflickr.com/9/8595/16198599186_9fa3e4cb01_k.jpg',
+  'https://c2.staticflickr.com/8/7466/16038655837_41aa4d8473_k.jpg',
+  'https://c2.staticflickr.com/8/7495/16036986748_e62854a9a8_k.jpg'];
 
 class Notes extends Component {
   render() {
@@ -43,18 +56,18 @@ class Notes extends Component {
     const notes = this.props.notes.map((note, i) => {
       return (
         <div key={ i } className="note" style={ noteStyle }>
-          { note }
-          <span onClick={ () => { this.props.closeFn(i); } } style={ xStyle }>X</span>
+        { note }
+        <span onClick={ () => { this.props.closeFn(i); } } style={ xStyle }>X</span>
         </div>
-      );
+        );
     });
 
 
     return (
       <div style={noteWrapperStyle}>
-        {notes}
+      {notes}
       </div>
-    );
+      );
   }
 }
 
@@ -62,7 +75,8 @@ class Root extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      notes: []
+      notes: [],
+      bgImage: ''
     };
 
     this.commands = {
@@ -151,7 +165,8 @@ class Root extends Component {
 
   componentWillMount() {
     let notes = this.load('notes') || [];
-    this.setState({ notes: notes });
+    let bgImage = images[Math.floor(Math.random() * images.length - 1)];
+    this.setState({ notes, bgImage });
   }
 
   editClick(evt) {
@@ -193,8 +208,9 @@ class Root extends Component {
       alignItems: 'center',
       fontSize: 16,
       backgroundColor: '#FDFDF',
-      backgroundImage: 'url("https://c1.staticflickr.com/9/8443/7872169478_34ee34451b_k.jpg")',
+      backgroundImage: `url("${this.state.bgImage}")`,
       backgroundPosition: 'center center',
+      backgroundSize: 'cover';
       fontFamily: 'Input Mono Compressed',
       fontWeight: 200,
       fontStyle: 'italic'
@@ -224,13 +240,12 @@ class Root extends Component {
 
     return (
       <div style={ wrapperStyle } ref="bg">
-        <div style={ editableStyle } ref="editable" onClick={ this.editClick.bind(this) } onKeyUp={ this.editKey.bind(this) }></div>
-        <input style={ inputStyle } ref="question-box" onKeyUp={ this.inputHandler.bind(this, 1) } />
-        <Notes closeFn={ this.removeNote.bind(this) } notes={ this.state.notes } />
+      <div style={ editableStyle } ref="editable" onClick={ this.editClick.bind(this) } onKeyUp={ this.editKey.bind(this) }></div>
+      <input style={ inputStyle } ref="question-box" onKeyUp={ this.inputHandler.bind(this, 1) } />
+      <Notes closeFn={ this.removeNote.bind(this) } notes={ this.state.notes } />
       </div>
-    );
+      );
   }
 }
-
 
 ReactDOM.render(<Root />, document.getElementById("reactContainer"));
